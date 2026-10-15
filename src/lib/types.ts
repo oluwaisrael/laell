@@ -1,4 +1,8 @@
-export type Category = "Clothing" | "Accessories";
+export interface Category {
+  id: string;
+  slug: string;
+  name: string;
+}
 export interface ProductVariant {
   id: string;
   color: string;
@@ -10,7 +14,7 @@ export interface Product {
   id: string;
   slug: string;
   name: string;
-  category: Category;
+  category: Category["name"];
   price: number;
   images: string[];
   alt: string;

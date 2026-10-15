@@ -1,4 +1,14 @@
-import type { Collection, Product, ProductVariant } from "@/lib/types";
+import type {
+  Category,
+  Collection,
+  Product,
+  ProductVariant,
+} from "@/lib/types";
+export const categories: Category[] = [
+  { id: "clothing", slug: "clothing", name: "Clothing" },
+  { id: "accessories", slug: "accessories", name: "Accessories" },
+];
+
 const variants = (
   id: string,
   color: string,

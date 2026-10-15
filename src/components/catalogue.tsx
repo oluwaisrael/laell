@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { products } from "@/data/catalogue";
+import { categories, products } from "@/data/catalogue";
 import { ProductCard } from "./product-card";
 export function Catalogue() {
   const [category, setCategory] = useState("All pieces");
@@ -29,15 +29,17 @@ export function Catalogue() {
           role="group"
           aria-label="Filter by category"
         >
-          {["All pieces", "Clothing", "Accessories"].map((c) => (
-            <button
-              key={c}
-              aria-pressed={category === c}
-              onClick={() => setCategory(c)}
-            >
-              {c}
-            </button>
-          ))}
+          {["All pieces", ...categories.map((category) => category.name)].map(
+            (c) => (
+              <button
+                key={c}
+                aria-pressed={category === c}
+                onClick={() => setCategory(c)}
+              >
+                {c}
+              </button>
+            ),
+          )}
         </div>
         <div className="sort-controls">
           <label className="stock-filter">

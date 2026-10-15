@@ -42,11 +42,11 @@ LĀEL Atelier, LĀEL Objects and LĀEL Café are explicitly future concepts, not
 
 See `.env.example`. `NEXT_PUBLIC_*` values are public and embedded at build time; never put secrets in them.
 
-| Variable | Purpose |
-| --- | --- |
-| `NEXT_PUBLIC_SITE_URL` | Canonical origin for metadata and sitemap; defaults to localhost. Set before production build. |
-| `NEXT_PUBLIC_CONTACT_EMAIL` | Verified public contact email. Empty by default. |
-| `NEXT_PUBLIC_INSTAGRAM_URL` | Verified HTTPS social profile. Hidden if empty or invalid. |
+| Variable                    | Purpose                                                                                        |
+| --------------------------- | ---------------------------------------------------------------------------------------------- |
+| `NEXT_PUBLIC_SITE_URL`      | Canonical origin for metadata and sitemap; defaults to localhost. Set before production build. |
+| `NEXT_PUBLIC_CONTACT_EMAIL` | Verified public contact email. Empty by default.                                               |
+| `NEXT_PUBLIC_INSTAGRAM_URL` | Verified HTTPS social profile. Hidden if empty or invalid.                                     |
 
 No tracking or analytics is installed. If added later, gate optional tracking behind reviewed privacy settings and consent as appropriate.
 
@@ -71,8 +71,8 @@ src/components/  Navigation, forms, product UI, dialogs, bag and page motion
 src/data/        Editable sample catalogue and policy drafts
 src/lib/         Shared interfaces, cart validation/store and site settings
 public/          Self-hosted image and identity assets
- tests/          Cart unit tests and Playwright browser tests
- docs/           Brand notes, image provenance, font licenses, backend roadmap
+tests/          Cart unit tests and Playwright browser tests
+docs/           Brand notes, image provenance, font licenses, backend roadmap
 ```
 
 The app intentionally has no database or server mutations. Product data is imported behind a small typed catalogue module; replace this source with a server-side repository when adding a backend. Keep client bag values untrusted, and recalculate every price and availability check on the server when ordering becomes possible.

@@ -71,7 +71,7 @@ test("contact and newsletter remain explicitly demo only", async ({ page }) => {
     "not saved or subscribed",
   );
 });
-test("all public routes render without broken images or horizontal overflow", async ({
+test("all public routes render without horizontal overflow", async ({
   page,
 }, testInfo) => {
   for (const path of [
@@ -90,6 +90,17 @@ test("all public routes render without broken images or horizontal overflow", as
     const response = await page.goto(path);
     expect(response?.status()).toBe(200);
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    await page.locator("img:visible").evaluateAll(async (images) => {
+      await Promise.all(
+        images.map((image) =>
+          (() => {
+            const photo = image as HTMLImageElement;
+            photo.loading = "eager";
+            return photo.decode();
+          })(),
+        ),
+      );
+    });
     expect(
       await page.evaluate(
         () => document.documentElement.scrollWidth <= window.innerWidth,
@@ -100,6 +111,7 @@ test("all public routes render without broken images or horizontal overflow", as
   await page
     .locator(".campaign img")
     .evaluate((img: HTMLImageElement) => img.decode());
+  await page.emulateMedia({ reducedMotion: "reduce" });
   await page.screenshot({
     path: `test-results/home-${testInfo.project.name}.png`,
     fullPage: true,
@@ -142,4 +154,42 @@ test("navigation works on mobile and desktop", async ({ page }, testInfo) => {
       name: "A considered life. An open perspective.",
     }),
   ).toBeVisible();
+});
+
+test("bag synchronizes across tabs and respects the stock cap", async ({
+  page,
+  context,
+}) => {
+  await page.goto("/shop/the-everyday-shirt");
+  const other = await context.newPage();
+  await other.goto("/");
+  await page.getByRole("button", { name: "S", exact: true }).click();
+  await page.getByRole("button", { name: "Add to bag", exact: true }).click();
+  for (let i = 0; i < 4; i++)
+    await page
+      .getByRole("button", { name: "Increase The Everyday Shirt quantity" })
+      .click();
+  await expect(
+    page.getByRole("button", { name: "Increase The Everyday Shirt quantity" }),
+  ).toBeDisabled();
+  await expect(other.getByRole("button", { name: /Bag 05/ })).toBeVisible();
+  await other.evaluate(() => localStorage.clear());
+  await expect(page.getByRole("dialog")).toContainText("A little room");
+});
+
+test("bag stays usable when browser storage is blocked", async ({ page }) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(window, "localStorage", {
+      get() {
+        throw new DOMException("Blocked", "SecurityError");
+      },
+    });
+  });
+  await page.goto("/shop/the-day-tote");
+  await page.getByRole("button", { name: "One size", exact: true }).click();
+  await page.getByRole("button", { name: "Add to bag", exact: true }).click();
+  await expect(page.getByRole("dialog")).toContainText("₦28,000");
+  await expect(page.getByRole("dialog")).toContainText(
+    "storage is unavailable",
+  );
 });
