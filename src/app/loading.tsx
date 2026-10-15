@@ -1,1 +1,9 @@
-export default function Loading(){return <div className="loading-shell" role="status"><p className="eyebrow">Opening the world of LĀEL…</p><div className="loading-line"/><div className="loading-line"/></div>}
+export default function Loading() {
+  return (
+    <div className="loading-shell" role="status">
+      <p className="eyebrow">Opening the world of LĀEL…</p>
+      <div className="loading-line" />
+      <div className="loading-line" />
+    </div>
+  );
+}
